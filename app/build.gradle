@@ -4,7 +4,6 @@ plugins {
 
 android {
     namespace 'com.abraham.voicefx'
-
     compileSdkVersion 34
 
     defaultConfig {
@@ -21,19 +20,24 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
 }
 
 repositories {
     google()
     mavenCentral()
-    maven { url 'https://jitpack.io' }
+    maven { url "https://jitpack.io" }
 }
 
 dependencies {
-    implementation 'com.github.topjohnwu.libsu:core:5.1.1'
-    implementation 'com.github.topjohnwu.libsu:io:5.1.1'
+    implementation 'com.github.topjohnwu.libsu:core:6.0.0'
+    implementation 'com.github.topjohnwu.libsu:service:6.0.0'
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.11.0'
-    // agrega aquí más dependencias que uses
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
 }

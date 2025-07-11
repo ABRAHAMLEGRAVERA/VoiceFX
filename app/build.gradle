@@ -3,13 +3,12 @@ plugins {
 }
 
 android {
-    namespace 'com.abraham.voicefx'
-    compileSdk 34
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.abraham.voicefx"
-        minSdk 26
-        targetSdk 34
+        minSdk 21
+        targetSdk 33
         versionCode 1
         versionName "1.0"
     }
@@ -17,10 +16,12 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }
 
 dependencies {
-    implementation 'com.topjohnwu.superuser:core:1.1.1'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
 }

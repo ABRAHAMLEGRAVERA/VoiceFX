@@ -27,12 +27,6 @@ android {
     }
 }
 
-repositories {
-    google()
-    mavenCentral()
-    maven { url "https://jitpack.io" }
-}
-
 dependencies {
     implementation 'com.github.topjohnwu.libsu:core:6.0.0'
     implementation 'com.github.topjohnwu.libsu:service:6.0.0'

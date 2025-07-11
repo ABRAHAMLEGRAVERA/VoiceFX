@@ -3,71 +3,54 @@ package com.abraham.voicefx;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-import androidx.appcompat.app.AppCompatActivity;
-import com.topjohnwu.superuser.Shell;
+import android.widget.Toast;
 
-import android.content.Intent;
-import android.view.View;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.topjohnwu.superuser.Shell;
+import com.topjohnwu.superuser.internal.ShellImpl;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView logView;
-    EditText customCommandInput;
+    private EditText commandInput;
+    private Button executeButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        logView = findViewById(R.id.logView);
-        customCommandInput = findViewById(R.id.customCommandInput);
+        commandInput = findViewById(R.id.command_input);
+        executeButton = findViewById(R.id.execute_button);
 
-        Button startPulse = findViewById(R.id.startPulse);
-        Button stopPulse = findViewById(R.id.stopPulse);
-        Button chillVoice = findViewById(R.id.chillVoice);
-        Button robotVoice = findViewById(R.id.robotVoice);
-        Button womanVoice = findViewById(R.id.womanVoice);
-        Button manVoice = findViewById(R.id.manVoice);
-        Button kidVoice = findViewById(R.id.kidVoice);
-        Button girlVoice = findViewById(R.id.girlVoice);
-        Button customFilter = findViewById(R.id.customFilter);
+        // Inicializar libsu
+        Shell.enableVerboseLogging = true;
+        if (!Shell.isAppGrantedRoot()) {
+            Toast.makeText(this, "⚠️ No hay acceso root", Toast.LENGTH_SHORT).show();
+        }
 
-        startPulse.setOnClickListener(v -> runOptimized("pulseaudio --start --exit-idle-time=-1 --realtime=yes"));
-
-        stopPulse.setOnClickListener(v -> runOptimized("pulseaudio --kill"));
-
-        chillVoice.setOnClickListener(v -> runOptimized("sox -q -d -d pitch +1200"));
-
-        robotVoice.setOnClickListener(v -> runOptimized("sox -q -d -d pitch -500 tremolo 40 40"));
-
-        womanVoice.setOnClickListener(v -> runOptimized("sox -q -d -d pitch +400"));
-
-        manVoice.setOnClickListener(v -> runOptimized("sox -q -d -d pitch -400"));
-
-        kidVoice.setOnClickListener(v -> runOptimized("sox -q -d -d pitch +800"));
-
-        girlVoice.setOnClickListener(v -> runOptimized("sox -q -d -d pitch +600"));
-
-        customFilter.setOnClickListener(v -> {
-            String userCommand = customCommandInput.getText().toString();
-            if (!userCommand.isEmpty()) {
-                runOptimized(userCommand);
-            }
-        });
-
-        Button startService = findViewById(R.id.startService);
-        startService.setOnClickListener(v -> startForegroundService(new Intent(MainActivity.this, VoiceService.class)));
-
-        Button stopService = findViewById(R.id.stopService);
-        stopService.setOnClickListener(v -> stopService(new Intent(MainActivity.this, VoiceService.class)));
+        executeButton.setOnClickListener(v -> runShellCommand());
     }
 
-    private void runOptimized(String command) {
-        new Thread(() -> {
-            Shell.Result result = Shell.su(command).exec();
-            String output = result.getOut().toString() + "\n" + result.getErr().toString();
-            runOnUiThread(() -> logView.setText(output));
-        }).start();
+    private void runShellCommand() {
+        String command = commandInput.getText().toString().trim();
+
+        if (command.isEmpty()) {
+            Toast.makeText(this, "Escribe un comando", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Ejecutar el comando con root
+        List<String> output = Shell.cmd(command).exec().getOut();
+
+        // Mostrar el resultado
+        StringBuilder result = new StringBuilder();
+        for (String line : output) {
+            result.append(line).append("\n");
+        }
+
+        Toast.makeText(this, result.toString(), Toast.LENGTH_LONG).show();
     }
 }

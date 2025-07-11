@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <Button
+            android:id="@+id/startPulse"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Iniciar PulseAudio" />
+
+        <Button
+            android:id="@+id/stopPulse"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Detener PulseAudio" />
+
+        <Button
+            android:id="@+id/chillVoice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Voz Chillona" />
+
+        <Button
+            android:id="@+id/robotVoice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Voz Robot" />
+
+        <Button
+            android:id="@+id/womanVoice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Voz Mujer" />
+
+        <Button
+            android:id="@+id/manVoice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Voz Hombre" />
+
+        <Button
+            android:id="@+id/kidVoice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Voz Niño" />
+
+        <Button
+            android:id="@+id/girlVoice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Voz Niña" />
+
+        <EditText
+            android:id="@+id/customCommandInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Escribe comando personalizado" />
+
+        <Button
+            android:id="@+id/customFilter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Aplicar filtro personalizado" />
+
+        <Button
+            android:id="@+id/startService"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Iniciar servicio en segundo plano" />
+
+        <Button
+            android:id="@+id/stopService"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Detener servicio en segundo plano" />
+
+        <TextView
+            android:id="@+id/logView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Logs aparecerán aquí"
+            android:textIsSelectable="true"
+            android:padding="8dp"
+            android:background="#EEE"
+            android:textColor="#000" />
+
+    </LinearLayout>
+
+</ScrollView>

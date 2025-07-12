@@ -1,12 +1,11 @@
 package com.abraham.voicefx;
 
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.topjohnwu.superuser.Shell;
 
 public class MainActivity extends AppCompatActivity {
@@ -17,10 +16,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // Elementos de la interfaz
-        logView = findViewById(R.id.logView);
-        EditText customCommandInput = findViewById(R.id.customCommandInput);
 
         Button startPulse = findViewById(R.id.startPulse);
         Button stopPulse = findViewById(R.id.stopPulse);
@@ -33,35 +28,30 @@ public class MainActivity extends AppCompatActivity {
         Button customFilter = findViewById(R.id.customFilter);
         Button startService = findViewById(R.id.startService);
         Button stopService = findViewById(R.id.stopService);
+        EditText customCommandInput = findViewById(R.id.customCommandInput);
+        logView = findViewById(R.id.logView);
 
-        // Acciones por botón
-        startPulse.setOnClickListener(v -> runCommand("pulseaudio --start"));
-        stopPulse.setOnClickListener(v -> runCommand("pulseaudio --kill"));
-        chillVoice.setOnClickListener(v -> runCommand("sox -t alsa default output.wav pitch 500"));
-        robotVoice.setOnClickListener(v -> runCommand("sox -t alsa default output.wav synth 0.3 square 100"));
-        womanVoice.setOnClickListener(v -> runCommand("sox -t alsa default output.wav pitch 300"));
-        manVoice.setOnClickListener(v -> runCommand("sox -t alsa default output.wav pitch -200"));
-        kidVoice.setOnClickListener(v -> runCommand("sox -t alsa default output.wav pitch 700"));
-        girlVoice.setOnClickListener(v -> runCommand("sox -t alsa default output.wav pitch 400"));
+        startPulse.setOnClickListener(v -> runCommand("/data/data/com.termux/files/usr/bin/pulseaudio --start --exit-idle-time=-1"));
+        stopPulse.setOnClickListener(v -> runCommand("/data/data/com.termux/files/usr/bin/pulseaudio --kill"));
+
+        chillVoice.setOnClickListener(v -> runCommand("/data/data/com.termux/files/usr/bin/sox -t pulseaudio default -t pulseaudio null pitch 1000"));
+        robotVoice.setOnClickListener(v -> runCommand("/data/data/com.termux/files/usr/bin/sox -t pulseaudio default -t pulseaudio null synth sin 440 gain -n"));
+        womanVoice.setOnClickListener(v -> runCommand("/data/data/com.termux/files/usr/bin/sox -t pulseaudio default -t pulseaudio null pitch 400"));
+        manVoice.setOnClickListener(v -> runCommand("/data/data/com.termux/files/usr/bin/sox -t pulseaudio default -t pulseaudio null pitch -400"));
+        kidVoice.setOnClickListener(v -> runCommand("/data/data/com.termux/files/usr/bin/sox -t pulseaudio default -t pulseaudio null pitch 700"));
+        girlVoice.setOnClickListener(v -> runCommand("/data/data/com.termux/files/usr/bin/sox -t pulseaudio default -t pulseaudio null pitch 500"));
 
         customFilter.setOnClickListener(v -> {
-            String command = customCommandInput.getText().toString();
-            if (!command.isEmpty()) {
-                runCommand(command);
-            } else {
-                Toast.makeText(this, "Escribe un comando", Toast.LENGTH_SHORT).show();
-            }
+            String customCmd = customCommandInput.getText().toString();
+            if (!customCmd.isEmpty()) runCommand("/data/data/com.termux/files/usr/bin/" + customCmd);
         });
 
-        startService.setOnClickListener(v -> runCommand("am start-foreground-service com.abraham.voicefx/.VoiceService"));
-        stopService.setOnClickListener(v -> runCommand("am stopservice com.abraham.voicefx/.VoiceService"));
+        startService.setOnClickListener(v -> runCommand("/data/data/com.termux/files/usr/bin/pactl load-module module-null-sink sink_name=voicefx"));
+        stopService.setOnClickListener(v -> runCommand("/data/data/com.termux/files/usr/bin/pactl unload-module module-null-sink"));
     }
 
     private void runCommand(String command) {
-        Shell.Result result = Shell.cmd(command).exec();
-        String output = String.join("\n", result.getOut());
-        String error = String.join("\n", result.getErr());
-
-        logView.setText("Salida:\n" + output + "\n\nError:\n" + error);
+        String result = Shell.cmd(command).exec().getOut().toString();
+        logView.setText(result);
     }
 }
